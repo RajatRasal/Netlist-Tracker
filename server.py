@@ -54,7 +54,7 @@ def get_netlists():
 
 @app.route('/', methods=['GET'])
 def home():
-    return render_template('base.html', option='home')
+    return render_template('home.html', option='home')
 
 @app.route('/netlist', methods=['GET'])
 def netlists():
