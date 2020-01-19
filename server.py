@@ -54,7 +54,7 @@ def get_netlists():
 
 @app.route('/', methods=['GET'])
 def home():
-    return render_template('base.html')
+    return render_template('base.html', option='home')
 
 @app.route('/netlist', methods=['GET'])
 def netlists():
@@ -86,7 +86,8 @@ def outstanding_payments():
         unpaid_tuples.append(unpaid_player(name, count))
 
     return render_template('outstanding_payments.html',
-                           players=unpaid_tuples)
+                           players=unpaid_tuples,
+                           option='outstanding')
 
 
 if __name__ == '__main__':
