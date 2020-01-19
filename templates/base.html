@@ -28,19 +28,19 @@
           <div class="sidebar-sticky">
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link active" href="#">
+                <a class="nav-link {% if option == 'home' %} active {% endif %}" href="/">
                   <span data-feather="home" width="16" height="16"></span>
                   Home <span class="sr-only">(current)</span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link {% if option == 'netlist' %} active {% endif %}" href="/netlist">
                   <span data-feather="layers" width="16" height="16"></span>
                   Netlists
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link {% if option == 'outstanding' %} active {% endif %}" href="/outstanding">
                   <span data-feather="users" width="16" height="16"></span>
                   Outstanding
                 </a>
@@ -49,38 +49,6 @@
           </div>
         </nav>
         {% block content %}{% endblock %}
-        <!--main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-            <h1 class="h2">Netlists</h1>
-            <ul class="list-group list-group-horizontal mr-2">
-              <li class="p-2 list-group-item">Key</li>
-              <li class="p-2 list-group-item list-group-item-danger">Non-Member</li>
-              <li class="p-2 list-group-item list-group-item-warning">Member</li>
-            </ul>
-          </div>
-          {% for netlist in netlists %}
-          <div class="pb-2">
-            <h4>
-              <a class="btn btn-block text-left btn-light" data-toggle="collapse" href="#xx{{ loop.index }}" role="button" aria-expanded="false" aria-controls="xx{{ loop.index }}">
-                {{ netlist.date }}
-              </a>
-            </h4>
-            <div class="collapse" id="xx{{ loop.index }}">
-              <ul class="list-group pb-2">
-              {% for player in netlist.players %}
-                {% if player.paid is none %}
-                <li class="list-group-item list-group-item-danger">{{ loop.index }}. {{ player.cid }}</li>
-                {% elif not player.paid %}
-                <li class="list-group-item list-group-item-warning">{{ loop.index }}. {{ player.cid }}</li>
-                {% else %}
-                <li class="list-group-item">{{ loop.index }}. {{ player.cid }}</li>
-                {% endif %}
-              {% endfor %}
-            </ul>
-            </div>
-          </div>
-          {% endfor %}
-        </main-->
       </div>
 
       <!-- Icons -->

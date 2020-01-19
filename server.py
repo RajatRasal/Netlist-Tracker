@@ -1,7 +1,7 @@
 """
 Rendering the net payments tracker
 """
-from collections import Counter, defaultdict
+from collections import Counter, defaultdict, namedtuple
 from typing import Final
 
 import pandas as pd
@@ -12,9 +12,7 @@ from payments import check_payments, load_payments, load_cid_map, load_netlists,
 
 app: Final = Flask(__name__)
 
-
-@app.route('/netlist', methods=['GET'])
-def get_netlist():
+def get_netlists():
     # Member + non-member net products
     payment_mem = load_payments('./Purchase_Group_Report 32468.csv')
     payment_non_mem = load_payments('./Purchase_Group_Report 32541.csv')
@@ -52,6 +50,27 @@ def get_netlist():
                     free_nets[name] -= 1
             netlist.players[i].cid = name
 
+    return updated_netlists
+
+@app.route('/', methods=['GET'])
+def home():
+    return render_template('base.html')
+
+@app.route('/netlist', methods=['GET'])
+def netlists():
+    updated_netlists = get_netlists()
+
+    # Descending order of dates
+    updated_netlists.reverse()
+
+    return render_template('netlist.html',
+                           netlists=updated_netlists,
+                           option='netlist')
+
+@app.route('/outstanding', methods=['GET'])
+def outstanding_payments():
+    updated_netlists = get_netlists()
+
     # Descending order of dates
     updated_netlists.reverse()
 
@@ -61,10 +80,13 @@ def get_netlist():
             if not player.paid:
                 unpaid[player.cid] += 1
 
-    for pair in sorted(unpaid.items(), key=lambda kv: kv[1]):
-        print(pair)
+    unpaid_player = namedtuple('UnpaidPlayer', ['name', 'count'])
+    unpaid_tuples = []
+    for name, count in sorted(unpaid.items(), key=lambda x: x[1], reverse=True):
+        unpaid_tuples.append(unpaid_player(name, count))
 
-    return render_template('netlist.html', netlists=updated_netlists)
+    return render_template('outstanding_payments.html',
+                           players=unpaid_tuples)
 
 
 if __name__ == '__main__':

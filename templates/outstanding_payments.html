@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+            <h1 class="h2">Oustanding Net Payments</h1>
+          </div>
+          <div class="pb-2">
+            <ul class="list-group pb-2">
+              {% for player in players %}
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ player.name }}
+                <span class="badge badge-primary badge-pill">{{ player.count }}</span>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </main>
+{% endblock %}
