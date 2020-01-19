@@ -26,9 +26,6 @@ def get_netlist():
     # Netlists
     netlists = load_netlists('./netlist.csv', cid_map)
 
-    print(payments.get('01734392', 'NOT FOUND'))
-    print(cid_map.loc[cid_map['name'] == 'Thomas Hinde', :])
-
     updated_netlists = check_payments(netlists, payments)
 
     # Replace the cid with the actual name
