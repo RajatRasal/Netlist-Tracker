@@ -54,7 +54,23 @@ def get_netlists():
 
 @app.route('/', methods=['GET'])
 def home():
-    return render_template('home.html', option='home')
+    payment_mem = pd.read_csv('./Purchase_Group_Report 32468.csv')
+    payment_non_mem = pd.read_csv('./Purchase_Group_Report 32541.csv')
+
+    # Total actual net payments
+    actual = payment_mem['Gross Price'].sum() \
+            + payment_non_mem['Gross Price'].sum()
+
+    # Approx. expected net payments
+    expected = pd.read_csv('./freenet.csv',
+                           encoding='latin').notna().values.sum()
+    expected2 = pd.read_csv('./netlist.csv',
+                            encoding='latin').notna().values.sum()
+    expected = (expected2 - expected) * 5
+
+    return render_template('home.html', option='home',
+                           expected=expected,
+                           actual=int(actual))
 
 @app.route('/netlist', methods=['GET'])
 def netlists():
