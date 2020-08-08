@@ -5,10 +5,12 @@ import re
 from collections import Counter, defaultdict
 from dataclasses import dataclass
 from datetime import date, datetime
-from typing import Dict, List, Optional, TypeVar, Any, DefaultDict, TypedDict, Sequence
+from typing import Dict, List, Optional, TypeVar, Any, DefaultDict, TypedDict, Sequence, Type
 
 import pandas as pd
 import numpy as np
+from icu_ea_api import ICUEActivitiesAPI
+
 
 PaymentMap = Dict[str, int]
 # CinMap = TypeVar('CinMap')
@@ -34,6 +36,33 @@ class NetPlayer:
 class NetList:
     players: List[NetPlayer]
     date: date
+
+
+CounterType = Type[Dict[str, int]]
+
+
+class NetPaymentLoader:
+
+    def __init__(self, api: ICUEActivitiesAPI, product_names: List[str]) -> None:
+        self.api = api
+        self.product_names = product_names
+
+    def get_product_ids(self) -> List[str]:
+        product_ids = [] 
+        for product in self.api.list_products():
+            if product['Name'] in self.product_names:
+                product_ids.append(product['ID'])
+        return product_ids
+
+    def get_net_payments(self) -> CounterType:
+        product_ids = self.get_product_ids()
+        sales = self.api.list_online_sales()
+        counter = Counter(
+            sale['Customer']['Login']
+            for sale in sales
+            if sale['ProductID'] in product_ids
+        )
+        return counter
 
 
 def load_payments(data_file: str, freenet_file: Optional[str] = None) -> PaymentMap:
@@ -128,6 +157,15 @@ def check_payments(netlists: List[NetList], payments: PaymentMap) -> List[NetLis
     return updated_netlists
 
 if __name__ == '__main__':
+    """
     payments = load_payments('./tests/member_nets_test.csv')
     cid_map = load_cid_map('./tests/members_test.csv')
     netlists = load_netlists('./tests/netlist_test_incorrect_name.csv', cid_map)
+    """
+    csp_code = '007'
+    api_key = '8054C918-0D7B-4309-86AC-1333E1ACA3FE'
+    year = '19-20'
+
+    api = ICUEActivitiesAPI(csp_code, api_key, year)
+    loader = NetPaymentLoader(api, ['Net Booking'])
+    print(loader.get_net_payments())
