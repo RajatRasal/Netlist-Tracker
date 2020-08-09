@@ -1,6 +1,8 @@
 name: cricket_app
 dependencies:
-  - python=3.8.1
-  - pytest=5.2.0
-  - pandas=0.25.3 
-  - flask=1.1.1
+  - python=3.8.4
+  - pytest
+  - pandas
+  - flask
+  - pip:
+    - icu-ea-api

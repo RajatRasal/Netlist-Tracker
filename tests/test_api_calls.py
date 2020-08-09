@@ -12,7 +12,10 @@ def _test_payments_data():
         return json.loads(f.read())
     
 def _test_products():
-    return [{"Name": 'Net Booking', "ID": 32468}] 
+    return [
+        {"Name": 'Net Booking', "ID": 32468},
+        {"Name": 'Non-Member Net Booking', "ID": 32469},
+    ]
 
 
 @mock.patch( 'icu_ea_api.ICUEActivitiesAPI')
